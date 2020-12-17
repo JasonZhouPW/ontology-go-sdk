@@ -1,0 +1,11 @@
+the deploy contract txhash is 4527b9f67dd09873cdd0eee008ebff335e3bffb1235f6714066215641c80f36b
+the contractAddr is Abfzp84dWTyRDRyPmTVwzxn5Tvrjjx5USn
+
+lockwrapper addr is AaMxQ3EpwWooZysuKtYkGBsYm4bvvcdDZy
+
+//cmd optimize wasm
+./ontio-wasm-build user_agent.wasm opt_user_agent.wasm
+
+//user agent
+the contractAddr is ATw6Uim6CQQKG3n5Ecd2Khiq9oiYxjCXBi
+the contractAddr is 875c4d1767d3ec7be759ba583ee7f85fd5f65f85

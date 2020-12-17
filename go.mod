@@ -17,3 +17,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
+replace (
+	github.com/mitchellh/go-homedir => github.com/JasonZhouPW/go-homedir v1.1.0
+	launchpad.net/gocheck => github.com/go-check/check v0.0.0-20180628173108-788fd7840127
+)
