@@ -19,18 +19,19 @@ type AssetInfo struct {
 	AssetName string
 	UnderlyingAddress string
 	MarketAddress string
+	Decimals uint32
 }
 
 var asset_infos = []AssetInfo{
-	{AssetName:"ETH",UnderlyingAddress:"7009a2f7c8a2e45fa386a6078c7bfeaf518be487",MarketAddress:"9be819ef7f45fd45fdc2680a7691317814f408a8"},
-	{AssetName:"WING",UnderlyingAddress:"ff31ec74d01f7b7d45ed2add930f5d2239f7de33",MarketAddress:"36cf1ec1cae26e997bf79787b66a3fc7b9917b79"},
-	{AssetName:"USDT",UnderlyingAddress:"c6f91c11d740d39943b99a6b1c6fd2b5f476e2a3",MarketAddress:"abccea5e651d3030a8199e9d76e5687b9df89479"},
-	{AssetName:"WBTC",UnderlyingAddress:"aede525f05065306423a5522bfcd31b5847ffa52",MarketAddress:"55eb94463a3247687bf7e1da3ef82c06af6b0cdb"},
-	{AssetName:"renBTC",UnderlyingAddress:"ec547bc4486dea97cb659f1fe73407922f9e63c8",MarketAddress:"92a0ba9d8597fc53512230e4c9dec60998ada9a5"},
-	{AssetName:"USDC",UnderlyingAddress:"07a12c0a6bdce4df04ef4b2045d1b0fd63a56e25",MarketAddress:"e39e960c884f4d59b41b95387b14d0e4c57f3bd9"},
-	{AssetName:"UNI",UnderlyingAddress:"b79d2064947f61070cb68ef26cbc12cbf3b98d9e",MarketAddress:"44ac2d9de9bab53767dcf514b4320df739bae517"},
-	{AssetName:"SUSD",UnderlyingAddress:"37f4497b6f5f511e73843a0bda1042777666f7ec",MarketAddress:"b447d8946c51d8da28ec234a343488e407a35a38"},
-	{AssetName:"DAI",UnderlyingAddress:"96cf88356123592835a2fa75068a242260be1791",MarketAddress:"3ba975c2ac17b3b4ddab88fa96db142e99f4ff25"},
+	{AssetName:"ETH",UnderlyingAddress:"7009a2f7c8a2e45fa386a6078c7bfeaf518be487",MarketAddress:"9be819ef7f45fd45fdc2680a7691317814f408a8",Decimals:18},
+	{AssetName:"WING",UnderlyingAddress:"ff31ec74d01f7b7d45ed2add930f5d2239f7de33",MarketAddress:"36cf1ec1cae26e997bf79787b66a3fc7b9917b79",Decimals:9},
+	{AssetName:"USDT",UnderlyingAddress:"c6f91c11d740d39943b99a6b1c6fd2b5f476e2a3",MarketAddress:"abccea5e651d3030a8199e9d76e5687b9df89479",Decimals:6},
+	{AssetName:"WBTC",UnderlyingAddress:"aede525f05065306423a5522bfcd31b5847ffa52",MarketAddress:"55eb94463a3247687bf7e1da3ef82c06af6b0cdb",Decimals:8},
+	{AssetName:"renBTC",UnderlyingAddress:"ec547bc4486dea97cb659f1fe73407922f9e63c8",MarketAddress:"92a0ba9d8597fc53512230e4c9dec60998ada9a5",Decimals:8},
+	{AssetName:"USDC",UnderlyingAddress:"07a12c0a6bdce4df04ef4b2045d1b0fd63a56e25",MarketAddress:"e39e960c884f4d59b41b95387b14d0e4c57f3bd9",Decimals:6},
+	{AssetName:"UNI",UnderlyingAddress:"b79d2064947f61070cb68ef26cbc12cbf3b98d9e",MarketAddress:"44ac2d9de9bab53767dcf514b4320df739bae517",Decimals:18},
+	{AssetName:"SUSD",UnderlyingAddress:"37f4497b6f5f511e73843a0bda1042777666f7ec",MarketAddress:"b447d8946c51d8da28ec234a343488e407a35a38",Decimals:18},
+	{AssetName:"DAI",UnderlyingAddress:"96cf88356123592835a2fa75068a242260be1791",MarketAddress:"3ba975c2ac17b3b4ddab88fa96db142e99f4ff25",Decimals:18},
 }
 
 func InitEnv() (*sdk.OntologySdk ,*sdk.Wallet,error){
@@ -341,6 +342,10 @@ func Test_DeployWasmUserAgent(t *testing.T){
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("====setController====")
+	setController(ontsdk,signer,contractAddr)
+
 	fmt.Println("====setLockProxy====")
 	setLockProxy(ontsdk,signer,contractAddr)
 	//setLockProxyTest(ontsdk,signer,contractAddr)
@@ -348,11 +353,17 @@ func Test_DeployWasmUserAgent(t *testing.T){
 	fmt.Println("====setWingToken====")
 	setWingToken(ontsdk,signer,contractAddr)
 
-	fmt.Println("====setUnderlying====")
-	setUnderlying(ontsdk,signer,contractAddr)
+	fmt.Println("====setAssetInfos====")
+	setAssetInfos(ontsdk,signer,contractAddr)
 
-	fmt.Println("====setMarket====")
-	setMarket(ontsdk,signer,contractAddr)
+	//fmt.Println("====setUnderlying====")
+	//setUnderlying(ontsdk,signer,contractAddr)
+	//
+	//fmt.Println("====setTokenDecimals====")
+	//setTokenDecimals(ontsdk,signer,contractAddr)
+	//
+	//fmt.Println("====setMarket====")
+	//setMarket(ontsdk,signer,contractAddr)
 
 	fmt.Println("====setGovAddr====")
 	setGovAddr(ontsdk,signer,contractAddr)
@@ -363,18 +374,18 @@ func Test_DeployWasmUserAgent(t *testing.T){
 	fmt.Println("====setOriginLockProxy====")
 	setOriginLockProxy(ontsdk,signer,contractAddr)
 
-	//fmt.Printf("====setFeeCollector====")
-	//setFeeCollector(ontsdk,signer,contractAddr)
+	fmt.Printf("====setFeeCollector====")
+	setFeeCollector(ontsdk,signer,contractAddr)
 
 
 	//for test
 	//fmt.Println("====supply====")
 	//supply(ontsdk,signer,contractAddr)
-	////
+	//
 	//fmt.Println("====querybalance====")
 	//balance := querySupplyBalance(ontsdk,signer,contractAddr)
 	//fmt.Printf("balance is %d\n",balance)
-	////
+	//
 	//fmt.Println("====withdraw====")
 	//withdraw(ontsdk,signer,contractAddr)
 	//
@@ -393,7 +404,7 @@ func Test_DeployWasmUserAgent(t *testing.T){
 
 
 //modify after deploy user agent
-var userAgentAddr = "b27fb30b951bf22501a1adb89733e9198264389a"
+var userAgentAddr = "5e17c6ff2c59d3a25355234b2077ba39bf4011ea"
 func deployWasm(ontSdk *sdk.OntologySdk,signer *sdk.Account,local bool) (error,common.Address) {
 	//get a compiled wasm file from ont_cpp
 	wasmfile := "./user_agent_opt.wasm"
@@ -494,6 +505,32 @@ func initUserAgent(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr comm
 	}
 }
 
+func Test_SetController(t *testing.T){
+	ontsdk,wallet,err := InitEnv()
+	if err != nil {
+		panic(err)
+	}
+	//we get the first account of the wallet by your password
+	signer, err := wallet.GetDefaultAccount( []byte("123456"))
+	if err != nil {
+		fmt.Printf("error in GetDefaultAccount:%s\n", err)
+		return
+	}
+	fmt.Printf("===signer address is %s\n", signer.Address.ToBase58())
+	contractAddr,_ := common.AddressFromHexString(userAgentAddr)
+	//lpaddr,_:= common.AddressFromHexString("cacfa48d3fbfc70ac6c055760fde73f44955abb5")
+	setController(ontsdk,signer,contractAddr)
+}
+
+func setController(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr common.Address){
+	controller,_:= common.AddressFromHexString("0b4163e06c30df53a8bc7fbb0ecbf97b6132eaac")
+	err := invokeWasm(ontsdk,signer,contractAddr,"setControllerAddress",[]interface{}{controller})
+	if err != nil {
+		panic(err)
+	}
+}
+
+
 func Test_SetLockProxy(t *testing.T){
 	ontsdk,wallet,err := InitEnv()
 	if err != nil {
@@ -553,8 +590,8 @@ func setOriginLockProxy(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr
 }
 
 func setFeeCollector(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr common.Address){
-	lpaddr,_:= common.AddressFromBase58("AXdmdzbyf3WZKQzRtrNQwAR91ZxMUfhXkt")
-	err := invokeWasm(ontsdk,signer,contractAddr,"setOriginLockProxy",[]interface{}{lpaddr})
+	lpaddr,_:= common.AddressFromBase58("APHNPLz2u1JUXyD8rhryLaoQrW46J3P6y2")
+	err := invokeWasm(ontsdk,signer,contractAddr,"setFeeCollector",[]interface{}{lpaddr})
 	if err != nil {
 		panic(err)
 	}
@@ -589,25 +626,39 @@ func setUnderlying(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr comm
 			panic(err)
 		}
 	}
-
-	//
-	//eth_asset_addr,_:= common.AddressFromHexString("7009a2f7c8a2e45fa386a6078c7bfeaf518be487")
-	//err := invokeWasm(ontsdk,signer,contractAddr,"setUnderlyingName",[]interface{}{eth_asset_addr,"ETH"})
-	//if err != nil {
-	//	panic(err)
-	//}
-	//wing_asset_addr,_:= common.AddressFromHexString("ff31ec74d01f7b7d45ed2add930f5d2239f7de33")
-	//err = invokeWasm(ontsdk,signer,contractAddr,"setUnderlyingName",[]interface{}{wing_asset_addr,"WING"})
-	//if err != nil {
-	//	panic(err)
-	//}
-	//usdt_asset_addr,_:= common.AddressFromHexString("c6f91c11d740d39943b99a6b1c6fd2b5f476e2a3")
-	//err = invokeWasm(ontsdk,signer,contractAddr,"setUnderlyingName",[]interface{}{usdt_asset_addr,"USDT"})
-	//if err != nil {
-	//	panic(err)
-	//}
 }
 
+func setAssetInfos(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr common.Address){
+	for _,asset := range asset_infos{
+		fmt.Printf("===setAssetInfos:%v\n",asset)
+
+		asset_address,err := common.AddressFromHexString(asset.UnderlyingAddress)
+		if err != nil{
+			panic(err)
+		}
+		market_address,err := common.AddressFromHexString(asset.MarketAddress)
+		if err != nil{
+			panic(err)
+		}
+		err = invokeWasm(ontsdk,signer,contractAddr,"setAssetInfo",[]interface{}{asset.AssetName,asset_address,market_address,asset.Decimals})
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+
+func setTokenDecimals(ontsdk *sdk.OntologySdk,signer *sdk.Account,contractAddr common.Address){
+	for _,asset := range asset_infos{
+		fmt.Printf("===setTokenDecimals:%v\n",asset)
+
+		//asset_address,_ := common.AddressFromHexString(asset.UnderlyingAddress)
+		err := invokeWasm(ontsdk,signer,contractAddr,"setTokenDecimals",[]interface{}{asset.AssetName,asset.Decimals})
+		if err != nil {
+			panic(err)
+		}
+	}
+}
 
 func Test_SetMarket(t *testing.T){
 	ontsdk,wallet,err := InitEnv()
@@ -783,11 +834,12 @@ func Test_QuerySupplyBalance(t *testing.T){
 	}
 
 	contractAddr,_ := common.AddressFromHexString(userAgentAddr)
-
+	ethaddr := "0x26356Cb66F8fd62c03F569EC3691B6F00173EB02"
+	//ethaddr := "0x7FB1484882e4A3A7a4e31f0eb33bf3dD3d95f797"
 
 	for _,asset := range asset_infos {
 		asset_addr,_:= common.AddressFromHexString(asset.UnderlyingAddress)
-		res,err := ontsdk.WasmVM.PreExecInvokeWasmVMContract(contractAddr, "getUserSupplyBalance", []interface{}{asset_addr,"0x26356Cb66F8fd62c03F569EC3691B6F00173EB02"})
+		res,err := ontsdk.WasmVM.PreExecInvokeWasmVMContract(contractAddr, "getUserSupplyBalance", []interface{}{asset_addr,ethaddr})
 		if err != nil {
 			panic(err)
 		}
@@ -842,14 +894,17 @@ func Test_QueryWingBalance(t *testing.T){
 
 func queryWingBalance(ontologySdk *sdk.OntologySdk,contractAddr common.Address){
 	asset_addr,_:= common.AddressFromHexString("7009a2f7c8a2e45fa386a6078c7bfeaf518be487")
-	res,err := ontologySdk.WasmVM.PreExecInvokeWasmVMContract(contractAddr, "getUserWingBalance", []interface{}{asset_addr,"0x26356Cb66F8fd62c03F569EC3691B6F00173EB02"})
+	ethaddr:="0x7FB1484882e4A3A7a4e31f0eb33bf3dD3d95f797"
+	//ethaddr:="0x26356Cb66F8fd62c03F569EC3691B6F00173EB02"
+
+	res,err := ontologySdk.WasmVM.PreExecInvokeWasmVMContract(contractAddr, "getUserWingBalance", []interface{}{asset_addr,ethaddr})
 	if err != nil {
 		panic(err)
 	}
 	bts,_ := res.Result.ToInteger()
 	fmt.Println(bts)
 	usdt_addr,_:= common.AddressFromHexString("c6f91c11d740d39943b99a6b1c6fd2b5f476e2a3")
-	res,err = ontologySdk.WasmVM.PreExecInvokeWasmVMContract(contractAddr, "getUserWingBalance", []interface{}{usdt_addr,"0x26356Cb66F8fd62c03F569EC3691B6F00173EB02"})
+	res,err = ontologySdk.WasmVM.PreExecInvokeWasmVMContract(contractAddr, "getUserWingBalance", []interface{}{usdt_addr,ethaddr})
 	if err != nil {
 		panic(err)
 	}
@@ -1098,4 +1153,22 @@ func Test_Mint(t *testing.T){
 
 	err = invokeWasm(ontsdk,signer,contractAddr,"mint",[]interface{}{signer.Address,uint64(1000000)})
 	assert.Nil(t,err)
+}
+
+func Test_oep4decimal(t *testing.T){
+
+	ontsdk, _, err := InitEnv()
+	if err != nil {
+		panic(err)
+	}
+
+	daicontract ,_:=common.AddressFromHexString("96cf88356123592835a2fa75068a242260be1791")
+
+	r,err := ontsdk.NeoVM.PreExecInvokeNeoVMContract(daicontract,[]interface{}{"decimals",[]interface{}{}})
+
+	d,err := r.Result.ToInteger()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%d\n",d)
 }
